@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autotrading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        #app {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+            font-weight: normal;
+        }
+
+        #tasks {
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #taskForm {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <header>
+            <h1>Добро пожаловать в Autotrading !</h1>
+        </header>
+        
+        <section id="tasks">
+            <h2>Список Автомобилей</h2>
+            <ul id="taskList"></ul>
+        </section>
+
+        <section id="taskForm">
+            <h2>Добавить автомобиль</h2>
+            <form id="addTaskForm">
+                <input type="text" id="taskTitle" placeholder="Марка" required>
+                <textarea id="taskDescription" placeholder="Модель" required></textarea>
+                <input type="date" id="dueDate" required>
+                <input type="text" id="assignees" placeholder="Ответсвенный менеджер за автомобиль" required>
+                <button type="button" id="addTaskButton">Добавить</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const taskList = document.getElementById('taskList');
+            const taskTitleInput = document.getElementById('taskTitle');
+            const taskDescriptionInput = document.getElementById('taskDescription');
+            const dueDateInput = document.getElementById('dueDate');
+            const assigneesInput = document.getElementById('assignees');
+            const addTaskButton = document.getElementById('addTaskButton');
+
+            addTaskButton.addEventListener('click', function () {
+                const taskTitle = taskTitleInput.value.trim();
+                const taskDescription = taskDescriptionInput.value.trim();
+                const dueDate = dueDateInput.value;
+                const assignees = assigneesInput.value.trim();
+
+                if (taskTitle !== '' && taskDescription !== '' && dueDate !== '' && assignees !== '') {
+                    const task = {
+                        title: taskTitle,
+                        description: taskDescription,
+                        dueDate: dueDate,
+                        assignees: assignees,
+                        status: 'В салоне'
+                    };
+
+                    updateTaskList(task);
+                    showNotification('Автомобиль успешно добавлена!');
+                } else {
+                    showNotification('Пожалуйста, заполните все поля!');
+                }
+
+                taskTitleInput.value = '';
+                taskDescriptionInput.value = '';
+                dueDateInput.value = '';
+                assigneesInput.value = '';
+            });
+
+            function updateTaskList(task) {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${task.title}</strong><br>${task.description}<br>Год выпуска: ${task.dueDate}<br>Ответственный менеджер: ${task.assignees}<br>Статус: <span class="task-status">${task.status}</span>`;
+
+                const changeStatusButton = document.createElement('button');
+                changeStatusButton.textContent = 'Изменить статус';
+                changeStatusButton.addEventListener('click', function () {
+                    const taskStatus = li.querySelector('.task-status');
+                    taskStatus.textContent = changeTaskStatus(taskStatus.textContent);
+                });
+
+                li.appendChild(changeStatusButton);
+                taskList.appendChild(li);
+            }
+
+            function changeTaskStatus(currentStatus) {
+                switch (currentStatus) {
+                    case 'В салоне':
+                        return 'Продан';
+                    case 'Продан':
+                        return 'В салоне';
+                    case 'В салоне':
+                        return 'Продан';
+                    default:
+                        return currentStatus;
+                }
+            }
+
+            function showNotification(message) {
+                alert(message);
+            }
+        });
+    </script>
+</body>
+</html>

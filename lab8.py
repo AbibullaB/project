@@ -1,1 +1,1 @@
-# labka 8
+# kommentaryyyyyyyyyyyyyy
